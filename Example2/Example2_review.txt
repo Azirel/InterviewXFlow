@@ -1,0 +1,29 @@
+Example2_1.cs review:
+- see no point in extending Player with current functionality, I would put health change notifier in base class as it feels like a natural part of it
+- see no need to create an extention of a Player class at all as ExtPlayer name makes no sense
+- maybe extending Player would make more sense if we describe better it's meaning, I would rename it ReactivePlayer,
+in this way we understand better that it gives you notification approach to work with Player, also would consider using RX approach with this name to make a full combo
+- would replace "delegate void HealthChangedDelegate(int oldHealth, int newHealth)" with "Action<T1, T2>", I prefer using system tools instead of creating my own,
+but maybe this approach might have some not obvious benefits
+- HealthChanged event is not assigned anywhere, since I have no way to know if it's invokation checks if it's null before invoking it,
+I would assign a default value to it
+- line 28: kinda hard to understand this condition cause of the way it's described, I would inverse this condition
+- see no implementation of HitPlayer method, supposedly it's somewhere in Program class otherwise it would not even compile
+- formatting seems kinda weird, but maybe this is an awared choice, Idk
+
+Example2_2.cs review:
+- line 3: see obvious point in creating private event since it is already can accessed only inside the object
+- line 7: why invoke a value on addition?
+- wrap event as a property for only invoking it's value on addition? kinda weird. Ussualy this property approach used for checking value for null and stuff
+- line 3,4: innerChanged and Changed events - changed what? it's health? it's name? very obscure naming
+- so OnPlayerChanged will skip first change by design, but since we invoke it on subscription it will be invoked there and work futher just ok,
+It's definitely should be redesigned since OnPlayerChanged logics issue is solved in another entity and first invokation is completely false cause nothing changes,
+omg it is so wrong on so many levels, really hope you made this example up rater than took it from real production codebase
+- line 36: previousHealth is nullable, even if it should work the way it's written, I would check for a value with with provided flag HasValue
+
+Overview and comparison:
+In both examples we are trying to display health change with text widget.
+In both cases we design notification logics for Player to be aware of when change happens. Second example imho has more flaws then the first.
+Both of examples also have magics value number -10, which is not a good practice and it should be retrieved from settings in best case.
+I suggest using RX approch with Observable techniques to implement reactive approach.
+Also I don't see how TextView widget is injected. Maybe it's up to a framework this code is used in, idk.
