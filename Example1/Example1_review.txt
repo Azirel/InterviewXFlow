@@ -11,11 +11,16 @@ Example1_2.cs code review:
 - line:1 if we want to serialize Player state, [Serializable] should be placed on top of it's calss
 - line 20: [Serializable] on Damage property is a miss, same stuff as for line:4
 - line 17: same stuff as for line 1
-Not sure if Player class should be aware of what type of action is beaing applied to it, method Hit does not seem good. SetHealth instead looks a lot preferable.
 Not sure if an instance of a class with not public contructor can be created by Deserializer, but if it can then I would set Player's contructor as private (maybe protected) to enforce loading only Player from exteranl source.
 
 Design review and comparison:
-Main question is what issue we are trying to solve. We trying to hit Player (poor Player).
+Main question is what issue we are trying to solve. We trying to hit Player (poor Player) from what I see.
 Approach 1 - setup new Player and hit him.
 Approach 2 - load Player and hit him.
-See no direct problems or benefits with any of it, they just different for different needs. I would prefer Settings to be a struct instead of a class since it has no behaviour. I would reconsider practicability of craeting separate Settings entity for one and only property. If we want to simplify it even more I would suggest to pass all the parameters as program arguments in which case two const fields and one entity would be removed. Also methods SetHealth and Hit have no limits check, but since Player has no Death behaviour it might be by design. Also there is no default value for health in Example1_2 with default public constructor.
+- see no direct problems or benefits with any of it, they just different for different needs.
+- it is really hard to say if there is anything wrong with setting Health directly against making Hit method on a Player. On intuitive level Hit method seems preferable. I would justify it as in this case we have better incapsulation since we cannot anymore set health directly and logics on how to behave on receiving damage is inside the Player entity. But first approach also might have its usecases.
+- would prefer Settings to be a struct instead of a class since it has no behaviour.
+- would reconsider practicability of craeting separate Settings entity for one and only property.
+- if we want to simplify it even more I would suggest to pass all the parameters as program arguments in which case two const fields and one entity would be removed.
+- methods SetHealth and Hit have no limits check, but since Player has no Death behaviour it might be by design.
+- there is no default value for health in Example1_2 with default public constructor.
