@@ -1,0 +1,20 @@
+Example3_1.cs review:
+- would encapsulate List<Vector2> activeWalkPath into a separate entity, Path class should do the job
+- line 17: if there are so mane line, then it should be extracted into a separate method
+- weird logics on walkPath, why to make it null, but not empty?
+- lines 20: why do we set isMoving flag on no activeWalkPath? how is that related? we still might move event with no current enemy target
+- line 21: why do we set currentEnemy to null? How path is beign null should unfocus from enemy? enemy still might be the same event if the path to is null
+- line 4: why do introduced this? nobody accesses this value, we do not event have move behavour
+- lines 20-26: so wrong on so many levels
+- are we sure we want to calculate path on each updatePath? maybe update it only if target position changes?
+- are we sure Player is the entity that has to calculate path? I would reconsider
+
+Example3_2.cs review:
+- lines 12-23: extract into separate method
+- line 28: naming method with Try prefix usually implies a bool as a return value with out parameter, but that's up to a team code conventions
+- activeWalkPath field, what's the purpose of it? it never gets read and plays no role in codes logics
+
+Overview and comparison:
+- from what I see we trying to build path to enemy if it's given in both examples
+- both do not make much of a sense since there is no move behaviour. Knowing a path to enemy not means we have to move to it
+- for some reason we unfocus from enemy if path cannot be built, that seems like a weird design
