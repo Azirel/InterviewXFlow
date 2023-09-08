@@ -1,0 +1,41 @@
+Example4_1.cs review:
+[That is a lot of logics in there, I had a headache of this example]
+- line 10: my first thought is to use properties with private setters just to have control on when it's being accessed,
+but for current case I see no big problem with using readonly fields, this is more up to a team's code conventions
+- line 20: it seems like it should be an UI element, I would rename CheatElementBehaviour to CheatUIBehaviour and derived it from UIBehaviour
+- lines 22-23: I would add [RequiredComponents] attribute for Text and Button types
+- line 28: I think it can be simplified to "_button.onClick.AddListener(description.cheatAction);" or add ? operand to description to justify lambda expession
+- line 26: I would add null check for description parameter (if add [RequiredComponents] attribute for Text and Button types
+then usually there is no need to add null checks for _text and _button)
+- line 34: we getting not cheat actions, we get their descriptions, either rename maethod or return different type
+- line 37: it implies that CheatManager should be a singleton, but there is no logics to prevent from creating another instance of CheatManager
+- methods Setup, ShowCheatPanel and HideCheatPanel seems like doing completely wrong things:
+-- Setup is setting up nothing, it just assigns values
+-- ShowCheatPanel instantiates panel if there is none rather than showing it
+-- HideCheatPanel destroys it instead of hiding it
+-- I would put panel creation and destruction logics in Setup method,
+ShowCheatPanel and HideCheatPanel would just enable and disable the panel gameObject respectively
+- line 52: for God's sake just type a few more symbols and put a full name to a method, what's wrong with you?
+- line 62: shouldn't the instance be created under Canvas gameObject?
+- lines 63-65: I would try to simplify nested foreach with Linq.SelectMany
+- I see no point in nesting CheatActionDescription, CheatElementBehaviour and ICheatProvider inside CheatManager
+- I would reconsider creating new interface for only one method, alternative is making SomeManagerWithCheats implement IEnumerable<CheatActionDescription> itself,
+but that is only food for thought, it's not always best decision
+- CheatActionDescription has no behaviour, I would consider to make it a struct
+I might missed something critical, but it is very late and I'm tired, pls forgive me
+
+Example4_2.cs review:
+- line 7: weird name, I would rename CommonCheat to BaseCheatUIBehavoir or something like that
+- God bless you if u read this far
+- relation between SomeManagerWithCheats and CheatManager is obscure, from thier names is seems like they the are same stuff
+- CheatManager looks like more of a Panel controller, I see no managing any cheats
+- SomeManagerWithCheats naming gets some rejection on code review in production
+- Setup method just assigns value and Shows the panel, it is not quite the setting up
+- I would move all instantiation logics under CheatManager.Setup
+
+Overview and comparison:
+- we trying to setup some solution for cheating in our project, we do it with simple UI elements, which is just ok, it will work
+- second solution much more preferable for me since it looks lot more robust and direct, and most important thing is it actually can be review a lot easier
+cause it's HALF as shorter than the first solution
+- on the other side first solution trying in modularity and scalability, but still looks overcomplicated
+- overall I would not even approach to this problem with ingame UI, I would look for a terminal (console if u will) like solution, just have one input field to rule it all
